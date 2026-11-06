@@ -16,5 +16,10 @@ void set_unthrottled(bool on);
 bool unthrottled();
 // SDL_Delay(ms), or nothing when unthrottled.
 void pace_delay(std::uint32_t ms);
+// prehistorik-miyoo: keep frames `ms` apart, the drawing and the present
+// included (pace_delay(ms) after them made the menus' 18 Hz 14 Hz on the Miyoo,
+// where a menu frame takes ~14 ms).  `last` is the caller's (0: none yet); a
+// long gap starts afresh.  As transition_players.cpp's paced().
+void pace_period(std::uint32_t& last, std::uint32_t ms);
 
 }  // namespace olduvai::presentation

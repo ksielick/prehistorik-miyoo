@@ -54,6 +54,7 @@ struct TitlePresenter {
     TitleMenuCtx& ctx;
     SDL_Texture* tex = nullptr;
     bool to_menu = false;
+    Uint32 pace_last = 0;   // pace_period
 
     bool present(const FrameBuffer& f) {
         cursor_autohide_frame();
@@ -73,7 +74,7 @@ struct TitlePresenter {
         upload_native_frame(tex, f, ctx.hd_scale, ctx.rt.hd_profile);
         show_texture(ctx.pipe.sw.ren, tex);
         present_output(ctx.pipe.sw.ren);
-        pace_delay(kFrameMs);
+        pace_period(pace_last, kFrameMs);
         return true;
     }
     bool stopped() const { return ctx.quit_requested || to_menu; }
@@ -244,7 +245,7 @@ public:
                 want_quit_ = true;
             }
             present_output(ctx_.pipe.sw.ren);
-            pace_delay(kFrameMs);
+            pace_period(pace_last_, kFrameMs);
             if (want_start_ || want_quit_) break;
         }
         if (want_quit_) ctx_.quit_requested = true;
@@ -403,6 +404,7 @@ private:
     ConfirmDialog confirm_;
     StagingBindings bind_;
     bool want_start_ = false;
+    Uint32 pace_last_ = 0;   // pace_period
     bool want_quit_ = false;
     Menu menu_;
     DisplaySettings target_;   // the pipeline an Apply builds

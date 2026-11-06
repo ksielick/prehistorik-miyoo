@@ -429,7 +429,8 @@ LevelOutcome run_platform_level(GameOptions& opts, int display_level,
                 outcome = LevelOutcome::kQuitProgram;
                 break;
             }
-            pace_delay(frame_ms);
+            static Uint32 pause_pace = 0;   // pace_period
+            pace_period(pause_pace, frame_ms);
             continue;
         }
         if (pfr == PauseService::FreezeResult::kReinitDisplay) {

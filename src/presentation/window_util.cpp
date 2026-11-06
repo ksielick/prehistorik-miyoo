@@ -45,6 +45,16 @@ void pace_delay(std::uint32_t ms) {
     if (!g_unthrottled) SDL_Delay(ms);
 }
 
+void pace_period(std::uint32_t& last, std::uint32_t ms) {
+    const Uint32 now = SDL_GetTicks();
+    if (last != 0 && now - last < ms) {
+        pace_delay(ms - (now - last));
+        last += ms;   // the schedule, not the wake-up: no drift
+    } else {
+        last = now;   // first frame, or a long gap (a load, a stall)
+    }
+}
+
 void TickPacer::end_tick(SDL_Renderer* ren, SDL_Texture* tex,
                          bool smooth_vsync_ran, bool vga_scan, bool hd) {
     if (smooth_vsync_ran || g_unthrottled) {

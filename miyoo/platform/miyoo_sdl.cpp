@@ -1168,8 +1168,11 @@ static void MaybeShot(const SDL_Texture *t)
 	}
 }
 
+extern "C" void MiyooProf_Frame(void);	/* miyoo_prof.c (MIYOO_PROF=file,first,count) */
+
 void SDL_RenderPresent(SDL_Renderer *ren)
 {
+	MiyooProf_Frame();
 	FrameTime();
 	MaybeShot(&ren->back);
 	MiyooFb_Present(ren->back.px, ren->back.w, ren->back.h, ren->back.w);
