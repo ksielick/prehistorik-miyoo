@@ -71,7 +71,13 @@ AboutBuild about_build(const std::string& sdl_version) {
 std::vector<std::string> about_lines(const AboutBuild& b,
                                      std::size_t max_chars) {
     std::vector<std::string> out;
+#ifdef MIYOO_MINI
+    // prehistorik-miyoo: a modified build of Olduvai under its own name
+    // (LEGAL.md "Project name and marks"), pointing back to the original.
+    wrap_into(out, "prehistorik-miyoo " + b.version, max_chars);
+#else
     wrap_into(out, "Olduvai " + b.version, max_chars);
+#endif
     wrap_into(out, "Build " + b.build_id, max_chars);
     std::string platform = b.os;
     if (!b.arch.empty()) platform += " " + b.arch;
@@ -85,10 +91,18 @@ std::vector<std::string> about_lines(const AboutBuild& b,
     }
     wrap_into(out, "(c) 2026 Krzysztof Sokolowski", max_chars);
     wrap_into(out, "GPL-3.0-or-later", max_chars);
+#ifdef MIYOO_MINI
+    wrap_into(out, "Miyoo port: github.com/ksielick/prehistorik-miyoo",
+              max_chars);
+    wrap_into(out, "Based on Olduvai: github.com/ksokolowski/olduvai",
+              max_chars);
+    wrap_into(out, "Not endorsed by the Olduvai project.", max_chars);
+#else
     wrap_into(out, "github.com/ksokolowski/olduvai", max_chars);
     wrap_into(out,
               "A native engine recreation of Prehistorik (1991, Titus).",
               max_chars);
+#endif
     wrap_into(out, "Requires your own game files.", max_chars);
     if (out.size() > kAboutRows) out.resize(kAboutRows);
     return out;

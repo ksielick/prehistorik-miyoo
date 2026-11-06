@@ -29,3 +29,6 @@ olduvai-*-windows-x86_64.zip
 
 # Per-job test venv (windows CI builds it from tests/requirements.txt with uv)
 .venv-tests/
+
+# the Miyoo port's build scripts (not a build tree)
+!miyoo/build/

@@ -281,7 +281,7 @@ void draw_menu_vector(const enhance::Canvas& cv,
     const int entry_cap = font.cap_px();
     font.set_cap_px(std::max(1, entry_cap * f.w / cv.w));
     const std::string& hdr = menu.header();
-    if (hdr == "OLDUVAI") {
+    if (hdr == "OLDUVAI" || hdr == "PREHISTORIK") {
         // The title header: 1.7x the menu cap with a dark outline so the
         // fire-blood fill reads over the intro background; the cap is restored
         // for the rows. Other headers stay flat accent blue.

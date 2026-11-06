@@ -170,7 +170,11 @@ void md_summary(std::ostream& f, const systems::SystemsState& state,
     f << "# Bug report - L" << display_level << " (int." << internal_level
       << ") screen " << state.current_screen << " - f5\n\n";
     f << "**When:** " << captured_at << "\n";
+#ifdef MIYOO_MINI
+    f << "**Engine:** prehistorik-miyoo (based on Olduvai) " << OLDUVAI_VERSION << " ("
+#else
     f << "**Engine:** olduvai " << OLDUVAI_VERSION << " ("
+#endif
       << olduvai::build_id() << ")\n";
     f << "**Tag:** " << (ann.tag.empty() ? "f5" : ann.tag) << "\n";
     f << "**Reproducibility:** "

@@ -1,13 +1,16 @@
-Prehistorik (1991) - the Olduvai engine on the Miyoo Mini Plus (OnionOS)
-=========================================================================
+prehistorik-miyoo - Prehistorik (1991) on the Miyoo Mini Plus (OnionOS)
+=======================================================================
 
-Olduvai is a from-scratch engine for Prehistorik by Krzysztof Sokolowski:
-https://github.com/ksokolowski/olduvai  (GPL-3.0). This is a port of it to the
-Miyoo Mini Plus. It ships no game content: you need your own copy of the game.
+A modified build of Olduvai, a from-scratch engine for Prehistorik by
+Krzysztof Sokolowski (https://github.com/ksokolowski/olduvai, GPL-3.0), ported
+to the Miyoo Mini Plus: https://github.com/ksielick/prehistorik-miyoo
+It is not made or endorsed by the Olduvai project; report problems with this
+port there, not to Olduvai. It ships no game content: you need your own copy
+of the game.
 
 Game files
 ----------
-Put these into  Roms/PORTS/Games/Olduvai/game/ :
+Put these into  Roms/PORTS/Games/Prehistorik/game/ :
 
     FILESA.CUR  FILESB.CUR  FILESA.VGA  FILESB.VGA
     and EITHER  HISTORIK.EXE  OR  PREH.SQZ  (GOG's Prehistorik 1+2 has PREH.SQZ)

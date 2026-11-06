@@ -1,7 +1,8 @@
 #!/bin/sh
-# Prehistorik (1991) through the Olduvai engine on the Miyoo Mini Plus with OnionOS.
+# prehistorik-miyoo: Prehistorik (1991) on the Miyoo Mini Plus with OnionOS, a modified build
+# of the Olduvai engine (https://github.com/ksokolowski/olduvai) under its own name.
 # Started by the Ports shortcut (Roms/PORTS/Shortcuts/Platform/Prehistorik (1991).port) through
-# Onion's launch_standalone.sh, or over SSH: sh launch.sh [olduvai arguments]
+# Onion's launch_standalone.sh, or over SSH: sh launch.sh [engine arguments]
 # After quake2-miyoomini's launch.sh. The player's own game files go in game/ here:
 # FILESA.CUR, FILESB.CUR, FILESA.VGA, FILESB.VGA and HISTORIK.EXE (or GOG's PREH.SQZ).
 DIR=$(cd "$(dirname "$0")" && pwd)
@@ -33,19 +34,29 @@ done
 if ! have_game; then
 	for z in /mnt/SDCARD/Roms/DOS/Prehistorik\ \(1991\)*.zip /mnt/SDCARD/Roms/DOS/Prehistorik.zip; do
 		[ -f "$z" ] || continue
-		rm -rf /tmp/olduvai_unzip && mkdir -p /tmp/olduvai_unzip
-		unzip -o -q "$z" -d /tmp/olduvai_unzip 2>/dev/null
+		rm -rf /tmp/prehistorik_unzip && mkdir -p /tmp/prehistorik_unzip
+		unzip -o -q "$z" -d /tmp/prehistorik_unzip 2>/dev/null
 		for n in FILESA.CUR FILESB.CUR FILESA.VGA FILESB.VGA HISTORIK.EXE PREH.SQZ; do
-			src=$(find /tmp/olduvai_unzip -iname "$n" -type f 2>/dev/null | head -1)
+			src=$(find /tmp/prehistorik_unzip -iname "$n" -type f 2>/dev/null | head -1)
 			[ -n "$src" ] && cp "$src" "game/$n"
 		done
-		rm -rf /tmp/olduvai_unzip
+		rm -rf /tmp/prehistorik_unzip
 		have_game && break
 	done
 fi
 
+# The DOS game's picture (Roms/DOS/Imgs/Prehistorik (1991).png, from the player's scraper) as
+# this port's picture in the Ports list, when there is one: copied whenever it differs (an
+# update of the port brings back the port's own picture)
+PORT_IMG="/mnt/SDCARD/Roms/PORTS/Imgs/Prehistorik (1991).png"
+for img in "/mnt/SDCARD/Roms/DOS/Imgs/Prehistorik (1991).png" /mnt/SDCARD/Roms/DOS/Imgs/Prehistorik.png; do
+	[ -f "$img" ] || continue
+	cmp -s "$img" "$PORT_IMG" || cp "$img" "$PORT_IMG"
+	break
+done
+
 if ! have_game; then
-	printf 'Prehistorik files missing: put\nFILESA.CUR FILESB.CUR FILESA.VGA\nFILESB.VGA HISTORIK.EXE (or PREH.SQZ)\nin Roms/PORTS/Games/Olduvai/game/' > /tmp/MissingPortFile.tmp
+	printf 'Prehistorik files missing: put\nFILESA.CUR FILESB.CUR FILESA.VGA\nFILESB.VGA HISTORIK.EXE (or PREH.SQZ)\nin Roms/PORTS/Games/Prehistorik/game/' > /tmp/MissingPortFile.tmp
 	exit 1
 fi
 
@@ -67,8 +78,8 @@ if [ -f playlog.on ]; then
 	export MIYOO_FRAMES="$DIR/playlog/frames-$(date +%Y%m%d-%H%M%S).txt"
 fi
 
-chmod +x ./olduvai 2>/dev/null
+chmod +x ./prehistorik 2>/dev/null
 # Classic DOS by default (the 1991 game at full speed on this CPU); Options - Style switches to
 # Enhanced HD and the choice is kept in conf/olduvai/play.json
 # (exec: Onion's SIGTERM at power-off reaches the game itself, which saves and quits)
-exec ./olduvai --game-dir ./game --default-profile dos-handheld "$@" > log.txt 2>&1
+exec ./prehistorik --game-dir ./game --default-profile dos-handheld "$@" > log.txt 2>&1
