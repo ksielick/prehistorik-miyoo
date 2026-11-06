@@ -15,7 +15,7 @@ No game content is included: you need your own copy of the game
 
 ## Install
 
-**With Port Manager** (when the port is in its catalog): Port Manager › all ports ›
+**With [Port Manager](https://github.com/ksielick/portmanager-miyoo):** all ports (X) ›
 *Prehistorik (1991)* › install.
 
 **By hand:** download `Prehistorik-Miyoo-<version>.zip` from the
