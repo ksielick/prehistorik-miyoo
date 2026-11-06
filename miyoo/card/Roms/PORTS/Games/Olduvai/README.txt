@@ -18,7 +18,7 @@ left as it is.
 
 Starting
 --------
-Ports -> Platform -> Prehistorik.
+Ports -> Platform -> Prehistorik (1991).
 
 Buttons
 -------

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Prehistorik (1991) through the Olduvai engine, for the Miyoo Mini Plus (OnionOS)
 # https://github.com/ksokolowski/olduvai (Miyoo port: branch miyoo)
-GameName="Prehistorik"
+GameName="Prehistorik (1991)"
 GameDir="Olduvai"
 GameExecutable="launch.sh"
 # the program itself: the shortcut always shows; launch.sh tells if the game files are missing

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Prehistorik (1991) through the Olduvai engine on the Miyoo Mini Plus with OnionOS.
-# Started by the Ports shortcut (Roms/PORTS/Shortcuts/Platform/Prehistorik.port) through
+# Started by the Ports shortcut (Roms/PORTS/Shortcuts/Platform/Prehistorik (1991).port) through
 # Onion's launch_standalone.sh, or over SSH: sh launch.sh [olduvai arguments]
 # After quake2-miyoomini's launch.sh. The player's own game files go in game/ here:
 # FILESA.CUR, FILESB.CUR, FILESA.VGA, FILESB.VGA and HISTORIK.EXE (or GOG's PREH.SQZ).
@@ -22,6 +22,7 @@ have_game () {
 for f in game/*; do
 	[ -f "$f" ] || continue
 	b=$(basename "$f")
+	case "$b" in *.txt|*.TXT) continue ;; esac
 	u=$(echo "$b" | tr 'a-z' 'A-Z')
 	[ "$b" = "$u" ] && continue
 	mv "$f" game/.rename_tmp && mv game/.rename_tmp "game/$u"
