@@ -515,9 +515,18 @@ LevelOutcome run_platform_level(GameOptions& opts, int display_level,
         // at 18 Hz).  Cave/secret enter/exit and the L3/L7 warp: the palette
         // fade pair (FUN_1052_0c15).  The HUD pans with the screen: both
         // buffers carry their own.
+#ifdef MIYOO_MINI
+        // Miyoo port: the screen pans and fades are smooth (wall-clock, 60
+        // Hz) in Classic too, the play itself staying the 1991 game;
+        // transitions "classic" brings back the 12 steps at 18 Hz.
+        const bool smooth_transitions =
+            opts.enhance.smooth_motion || opts.transitions != "classic";
+#else
+        const bool smooth_transitions = opts.enhance.smooth_motion;
+#endif
         view.play_transition(pf, bubble_hook,
                              {&running, diag.draw_log.get(), frame_ms,
-                              opts.enhance.smooth_motion});
+                              smooth_transitions});
 
         maybe_auto_fullscreen(sw.win, frame);
 
