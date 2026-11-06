@@ -49,3 +49,4 @@ packaging/winget/** export-ignore
 scripts/make_preview_clip.sh export-ignore
 .gitea/ export-ignore
 .gitea/** export-ignore
+*.port text eol=lf
