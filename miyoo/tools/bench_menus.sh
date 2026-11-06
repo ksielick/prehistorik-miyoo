@@ -50,8 +50,16 @@ for r in $RUNS; do
 		$SK 1 1; sleep 0.2; $SK 1 0		# and closed again
 		finish B ;;
 	C)
-		export OLDUVAI_FRAME_STATS=1 MIYOO_SHOTS=400; run C 40 --default-profile hd-handheld --play --level 1
-		unset OLDUVAI_FRAME_STATS; finish C ;;
+		export OLDUVAI_FRAME_STATS=1 MIYOO_PROF=/tmp/olbench/C.prof,300,400 MIYOO_PROF_WALL=1 MIYOO_SHOTS=0; run C 40 --default-profile hd-handheld --play --level 1
+		unset OLDUVAI_FRAME_STATS MIYOO_PROF MIYOO_PROF_WALL; finish C ;;
+	D)
+		# Enhanced HD with the smooth fill paced by the panel (vsync on, sub-frames auto)
+		# instead of hd-handheld's 2 sub-frames with SDL_Delay
+		mkdir -p /tmp/olbench/conf/olduvai
+		printf '{\n  "enhanced": true,\n  "smooth_subframes": 0,\n  "smooth_vsync": "auto"\n}\n' > /tmp/olbench/conf/olduvai/play.json
+		export OLDUVAI_FRAME_STATS=1 MIYOO_PROF=/tmp/olbench/D.prof,300,400 MIYOO_PROF_WALL=1 MIYOO_SHOTS=0; run D 40 --default-profile hd-handheld --play --level 1
+		unset OLDUVAI_FRAME_STATS MIYOO_PROF MIYOO_PROF_WALL; finish D
+		rm -f /tmp/olbench/conf/olduvai/play.json ;;
 	esac
 done
 free > "$O/free.txt"

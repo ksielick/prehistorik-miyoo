@@ -66,6 +66,13 @@ mkdir -p "$OUT/obj" "$OUT/include/SDL2"
 echo $COMMON "MT32=$MT32" > "$OUT/cflags.new"
 cmp -s "$OUT/cflags.new" "$OUT/cflags.stamp" || { cp "$OUT/cflags.new" "$OUT/cflags.stamp"; FORCE=1; }
 rm -f "$OUT/cflags.new"
+# a header newer than the last build: everything again (only source dates are compared below;
+# a changed header once left a binary unchanged, 2026-11-06)
+if [ -z "$FORCE" ] && [ -f "$OUT/olduvai.unstripped" ] &&
+	[ -n "$(find src miyoo third_party/nuked_opl3 -name '*.h*' -newer "$OUT/olduvai.unstripped" 2>/dev/null | head -1)" ]; then
+	echo "  (a header changed: rebuilding everything)"
+	FORCE=1
+fi
 echo $COMMON -std=c++17 > "$OUT/cxxflags.rsp"
 echo $COMMON -std=gnu11 > "$OUT/cflags.rsp"
 export CC CXX OUT

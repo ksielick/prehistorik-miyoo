@@ -42,6 +42,11 @@ static volatile uint32_t s_count;
 static int s_first = -1, s_last, s_frame;
 static char s_file[256];
 static int s_on;
+/* MIYOO_PROF_WALL=1 (prehistorik-miyoo, 2026-11-06): every thread sampled every 1 ms of wall
+   time (CLOCK_MONOTONIC) instead of its own CPU time. The per-thread CPU clocks gave 16
+   samples for ~6.7 s of CPU in prehistorik-miyoo on the device's kernel; wall-time samples
+   also show where a thread waits (the pc in the syscall, the lr in its caller). */
+static int s_wall;
 
 static timer_t s_timers[PROF_THREADS];
 static int s_timerTids[PROF_THREADS];
@@ -96,7 +101,7 @@ static void StartTimers(void)
 		sev.sigev_notify = SIGEV_THREAD_ID;
 		sev.sigev_signo = SIGPROF;
 		sev._sigev_un._tid = tid;	/* (glibc's sigev_notify_thread_id) */
-		if (timer_create(ThreadCpuClock(tid), &sev, &t) != 0)
+		if (timer_create(s_wall ? CLOCK_MONOTONIC : ThreadCpuClock(tid), &sev, &t) != 0)
 		{
 			fprintf(stderr, "miyoo: profile: no timer for thread %d: ", tid);
 			perror("timer_create");
@@ -108,7 +113,7 @@ static void StartTimers(void)
 		s_numTimers++;
 	}
 	closedir(dir);
-	fprintf(stderr, "miyoo: profile: sampling %d threads\n", s_numTimers);
+	fprintf(stderr, "miyoo: profile: sampling %d threads (%s time)\n", s_numTimers, s_wall ? "wall" : "CPU");
 }
 
 static void StopTimers(void)
@@ -228,6 +233,7 @@ void MiyooProf_Frame(void)
 		s_file[c1 - env] = 0;
 		s_first = first;
 		s_last = first + count;
+		s_wall = getenv("MIYOO_PROF_WALL") && atoi(getenv("MIYOO_PROF_WALL")) == 1;
 		s_samples = (ProfSample *)malloc(PROF_MAX * sizeof(ProfSample));
 
 		memset(&sa, 0, sizeof(sa));

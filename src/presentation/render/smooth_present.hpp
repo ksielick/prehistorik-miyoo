@@ -80,6 +80,7 @@ struct SmoothPacer {
     int discrete_n = 4;
     Uint32 frame_ms = 1000 / 18;
     Uint32 carryover = 0;
+    Uint32 deadline = 0;   // prehistorik-miyoo: the tick's end (SDL_GetTicks)
 };
 
 // Fill one logic tick with interpolated frames; render_at(alpha, sub) is
@@ -87,6 +88,32 @@ struct SmoothPacer {
 // must then skip its own delay.
 template <class RenderAt>
 inline bool smooth_fill_tick(SmoothPacer& p, RenderAt&& render_at) {
+#ifdef MIYOO_MINI
+    // prehistorik-miyoo: the ticks end on a fixed schedule, deadline +=
+    // frame_ms, so everything between two fills (the logic, the compose, a
+    // transition's first frame) counts too.  Budget and carryover from the
+    // fill's own start left those out: 17.43 Hz instead of 18.2 with presents
+    // paced by the panel (2026-11-06).
+    if (p.vsync && !unthrottled()) {
+        const Uint32 t0 = SDL_GetTicks();
+        const Sint32 behind = static_cast<Sint32>(t0 - p.deadline);
+        if (p.deadline == 0 || behind > static_cast<Sint32>(p.frame_ms))
+            p.deadline = t0 + p.frame_ms;   // the first tick, or after a stall
+        else
+            p.deadline += p.frame_ms;
+        const Uint32 span = p.deadline > t0 ? p.deadline - t0 : 1;
+        for (int sub = 1;; ++sub) {
+            const Uint32 el = SDL_GetTicks() - t0;
+            const float alpha =
+                el >= span ? 1.0f
+                           : static_cast<float>(el) / static_cast<float>(span);
+            render_at(alpha, sub);
+            if (static_cast<Sint32>(SDL_GetTicks() - p.deadline) >= 0 ||
+                sub >= 64)
+                return true;
+        }
+    }
+#endif
     // Timedemo: the discrete sub-frames, unpaced (the vsync fill is timed).
     if (p.vsync && !unthrottled()) {
         const Uint32 t0 = SDL_GetTicks();

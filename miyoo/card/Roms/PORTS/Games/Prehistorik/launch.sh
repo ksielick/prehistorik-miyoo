@@ -67,6 +67,15 @@ export XDG_CONFIG_HOME="$DIR/conf"
 export OLDUVAI_BUG_DIR="$DIR/bug_reports"
 export OLDUVAI_PANEL=640x480
 
+# Settings written by 0.9.11-1 (Options - Style saved the handheld Enhanced profile's 2
+# sub-frames and smooth_vsync off): once, to this port's smooth fill paced by the panel
+# (60 fps instead of 36). Not in the menus, so nothing the player chose is changed.
+PLAY=conf/olduvai/play.json
+if [ -f "$PLAY" ] && [ ! -f conf/.smooth-v2 ]; then
+	sed -i 's/"smooth_subframes": 2,/"smooth_subframes": 0,/; s/"smooth_vsync": "off"/"smooth_vsync": "auto"/' "$PLAY"
+fi
+mkdir -p conf && [ -f conf/.smooth-v2 ] || : > conf/.smooth-v2
+
 { echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor; } 2>/dev/null
 CPU1=/sys/devices/system/cpu/cpu1/online
 [ -f "$CPU1" ] && [ "$(cat "$CPU1" 2>/dev/null)" = 0 ] && { echo 1 > "$CPU1"; } 2>/dev/null

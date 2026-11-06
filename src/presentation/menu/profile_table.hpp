@@ -68,8 +68,16 @@ inline constexpr ProfilePin kHdHandheldPins[] = {
     {"hd_profile", "xbrz"},
     {"render_scale", "auto"},
     {"aspect", "auto"},
+#ifdef MIYOO_MINI
+    // prehistorik-miyoo: the panel paces the smooth fill (miyoo_fb.c's pan
+    // thread): 59.7 fps measured, against 36.4 with 2 sub-frames and
+    // SDL_Delay, the CPU at ~half a core either way.
+    {"smooth_subframes", "0"},
+    {"smooth_vsync", "auto"},
+#else
     {"smooth_subframes", "2"},
     {"smooth_vsync", "off"},
+#endif
     {"music_auto_gm", "false"},
 };
 
