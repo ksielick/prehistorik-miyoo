@@ -36,9 +36,10 @@ Quit with START -> Quit -> Exit Game -> Yes.
 
 Style
 -----
-It starts in Classic DOS: the 1991 game as it was. Options -> Style switches to
-Enhanced HD (smooth motion, upscaled graphics); it is heavier for this CPU. The
-choice is kept.
+It starts in Classic DOS: the 1991 game, with smooth 60 Hz pans and fades between
+screens ("transitions": "classic" in conf/olduvai/play.json brings back the
+original steps). Options -> Style switches to Enhanced HD (smooth motion at 60
+fps, upscaled graphics). The choice is kept.
 
 Files here
 ----------

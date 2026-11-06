@@ -44,7 +44,8 @@ Ports list if it isn't there yet).
 It starts in **Classic DOS**, the 1991 game, with one change made for this port: the pans and
 fades between screens run smoothly at 60 Hz (*transitions: classic* in
 `conf/olduvai/play.json` brings back the original 12 steps). *Options › Style* switches to
-Enhanced HD, which is heavy for this CPU.
+Enhanced HD: smooth motion at the panel's 60 Hz (59.7 fps measured) with the game logic at
+its 18 Hz.
 
 ## What the port changes
 
@@ -61,15 +62,28 @@ Everything Miyoo-specific is in [`miyoo/`](miyoo/) plus a few `#ifdef MIYOO_MINI
   (`gen_sources.sh`, cmake -P); the card layout and release zip (`pack_card.sh`).
 - `miyoo/card/`: the launcher, the Ports shortcut and picture.
 - `src/`: the port's own name on the About screen, in the title menu header and in bug
-  reports; smooth screen transitions in Classic.
+  reports; smooth screen transitions in Classic; menus and the intro paced by deadline
+  (`pace_period`), and Enhanced HD's frame pins and interpolation schedule tuned for the
+  device (`profile_table.hpp`, `smooth_present.hpp`).
+- `miyoo/tools/bench_menus.sh`: measurements on the device (frame times, profiles,
+  screenshots).
+
+Notes on the port's measurements and decisions: [miyoo/NOTES.md](miyoo/NOTES.md).
 
 ## Build
 
-From Git Bash on Windows, with the Arm GNU Toolchain (`TC=`) and SDL2 headers (`SDL2_INC=`):
+On Windows, with the Arm GNU Toolchain (`TC=`) and SDL2 headers (`SDL2_INC=`). The sources
+CMake would generate need cmake, here in WSL; call it from PowerShell (Git Bash rewrites the
+path and WSL silently does nothing):
+
+```powershell
+wsl -e sh miyoo/build/gen_sources.sh   # menu model, icon, build id -> build/miyoo/generated/
+```
+
+Then from Git Bash:
 
 ```sh
-wsl -e sh miyoo/build/gen_sources.sh   # needs cmake (here in WSL)
-miyoo/build/build_miyoo.sh             # -> build/miyoo/olduvai
+miyoo/build/build_miyoo.sh             # -> build/miyoo/olduvai (+ olduvai.unstripped)
 miyoo/build/pack_card.sh               # -> build/miyoo/card/, Prehistorik-Miyoo-<version>.zip
 ```
 
